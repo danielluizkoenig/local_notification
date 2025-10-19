@@ -122,9 +122,6 @@ if ($sort === 'daysdiff') {
     $order_dir = ($dir === 'asc') ? 'ASC' : 'DESC';
     $sql .= " ORDER BY $order_field $order_dir";
 }
-dump($sort);
-dump($sort === 'days_diff');
-dump($sql);
 $records = $DB->get_records_sql($sql, $params);
 
 // Botões de exportação

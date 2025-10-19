@@ -32,7 +32,7 @@ $is_siteadmin = is_siteadmin($userid);
 
 if ($is_siteadmin) {
     // Admin vê todos os cursos
-    $notifications = $DB->get_records('notification', null);
+    $notifications = $DB->get_records_sql('select distinct course_id FROM {notification} n JOIN {course} c ON c.id = n.course_id WHERE status = 1 AND c.visible = 1 ', null);
     foreach ($notifications as $notification) {
         $courses[] = $notification->course_id;
     }
@@ -80,13 +80,10 @@ echo html_writer::end_tag('div');
 echo html_writer::end_tag('form');
 
 // Consulta dos dados
-$my_courses = enrol_get_my_courses('id'); <=
-$my_course_ids = array_keys($my_courses);
-
-if (empty($my_course_ids)) {
+if (empty($course_ids)) {
     $records = array();
 } else {
-    list($course_insql, $course_inparams) = $DB->get_in_or_equal($my_course_ids, SQL_PARAMS_NAMED, 'course');
+    list($course_insql, $course_inparams) = $DB->get_in_or_equal($course_ids, SQL_PARAMS_NAMED, 'course');
     
     $sql = "SELECT n.id, n.subject, n.status, n.course_id, c.fullname as course_name, 
                    nq.description as notification_type,
