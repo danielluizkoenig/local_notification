@@ -10,10 +10,10 @@
 use local_notification\local_notification;
 
 require_once "../../config.php";
-require_once 'classes/form_course.php';
-require_once $CFG->dirroot . '/repository/lib.php';
-require_once $CFG->dirroot . '/local/notification/lib.php';
-require_once $CFG->dirroot . '/local/notification/locallib.php';
+require_once('classes/form_course.php');
+require_once($CFG->dirroot . '/repository/lib.php');
+require_once($CFG->dirroot . '/local/notification/lib.php');
+require_once($CFG->dirroot . '/local/notification/locallib.php');
 
 //course id
 $courseid = required_param('id', PARAM_INT);
@@ -26,12 +26,12 @@ if (!$course = $DB->get_record("course", ["id" => $courseid])) {
 require_login($course);
 $context = context_course::instance($course->id);
 
-if (isloggedin() && (has_capability('local/local_notification:view', $context) || is_siteadmin())) {
+if (isloggedin() && (has_capability('local/notification:view', $context) || is_siteadmin())) {
 
     $returnUrl = new moodle_url(local_notification::URL_COURSELIST, ['id' => $courseid, 'action' => 'list']);
     $PAGE->set_title(get_string('n_admin_add', local_notification::PLUGINNAME) . ' ' . format_string($course->fullname));
 
-    $PAGE->requires->js_call_amd('local_notification/notification', 'init', [$quiz, $USER->id]);
+    $PAGE->requires->js_call_amd('local_notification/notification', 'init', [$courseid, $USER->id]);
 
     $urlParams = ['id' => $courseid, 'action' => $action];
 
@@ -43,7 +43,7 @@ if (isloggedin() && (has_capability('local/local_notification:view', $context) |
     }
 
     $url = new moodle_url(local_notification::URL_COURSEFORM, $urlParams);
-    $mform = new form_course($url, $action, $notificationConfig);
+    $mform = new \local_notification\form_course($url, $action, $notificationConfig);
 
     $PAGE->set_url($url);
 
@@ -55,7 +55,7 @@ if (isloggedin() && (has_capability('local/local_notification:view', $context) |
     } elseif ($formdata = $mform->get_data()) {
         unset($formdata->submitbutton);
 
-        // Garanta que o days_after está sendo definido mesmo se vazio
+        // Ensure days_after is set even if empty
         if (!isset($formdata->days_after)) {
             $formdata->days_after = 0;
         }

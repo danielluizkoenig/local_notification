@@ -1,21 +1,36 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * Local notification plugin.
+ * Course notification form.
  *
  * @package    local_notification
- * @copyright  2025
- * @author     SENAI Soluções Digitais - SC <sd-tribo-ava@sc.senai.br>
-*/
+ * @copyright  2025 SENAI Soluções Digitais - SC
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+namespace local_notification;
+
 defined('MOODLE_INTERNAL') || die();
 
-use local_notification\local_notification;
+require_once($CFG->libdir . '/formslib.php');
+require_once($CFG->libdir . '/completionlib.php');
+require_once($CFG->dirroot . '/local/notification/locallib.php');
 
-require_once $CFG->libdir . '/formslib.php';
-require_once $CFG->libdir . '/completionlib.php';
-require_once $CFG->libdir . '/pdflib.php';
-require_once $CFG->dirroot . '/local/notification/locallib.php';
-
-class form_course extends moodleform
+class form_course extends \moodleform
 {
     public $action;
     public $notification;
@@ -30,12 +45,13 @@ class form_course extends moodleform
         $this->action = $action;
         $this->notification = $notification;
         $this->courseid = $actionurl->get_param('id');
-        $this->context = context_user::instance($USER->id);
+        $this->context = \context_user::instance($USER->id);
         parent::__construct($actionurl);
     }
 
-    private function verificaEdit($mform)
+    private function check_edit_mode($mform)
     {
+        $content = '';
         if ($this->action == 'edit') {
             $this->data_edit_preprocessing();
             $mform->setDefault('subject', $this->notification->subject);
@@ -45,7 +61,7 @@ class form_course extends moodleform
         }
         return $content;
     }
-    private function adicionaValidacoes($mform)
+    private function add_validations($mform)
     {
         $mform->addRule('subject', get_string('required'), 'required');
         $mform->addRule('content', get_string('required'), 'required');
@@ -92,7 +108,7 @@ class form_course extends moodleform
         global $DB, $COURSE, $CFG, $PAGE;
 
         $mform = $this->_form;
-        $content = $this->verificaEdit($mform);
+        $content = $this->check_edit_mode($mform);
 
         $mform->addElement('text', 'subject', get_string('n_subject', local_notification::PLUGINNAME), ['maxlength' => 255, 'size' => 255]);
         $mform->addElement('html', get_string('htmlvars', local_notification::PLUGINNAME));
@@ -106,7 +122,7 @@ class form_course extends moodleform
         $mform->setType('content', PARAM_RAW);
         $mform->setDefault('content', ['text' => $content]);
 
-        if (has_capability('moodle/site:config', context_system::instance())) {
+        if (has_capability('moodle/site:config', \context_system::instance())) {
             $urlConfig = new moodle_url('/local/notification/manage_queries.php');
             $urlConfig = html_writer::link($urlConfig, get_string('n_manage', local_notification::PLUGINNAME));
             $configHelp = '<div class="row"><div class="col-9 offset-3 pl-5">' . $urlConfig . '</div></div>';
@@ -140,9 +156,9 @@ class form_course extends moodleform
 
         $PAGE->requires->js_call_amd(local_notification::PLUGINNAME . '/form_control', 'init', [$COURSE->enddate]);
 
-        $this->adicionaValidacoes($mform);
+        $this->add_validations($mform);
 
-        // Adicionar antes do botão de submit
+        // Add before submit button
         $mform->addElement('text', 'days_after', get_string('days_after', 'local_notification'));
         $mform->setType('days_after', PARAM_INT);
         $mform->setDefault('days_after', $this->notification->days_after ?? 0);
@@ -209,7 +225,7 @@ class form_course extends moodleform
     public function data_edit_preprocessing()
     {
         global $DB;
-        $contextCourse = context_course::instance($this->courseid);
+        $contextCourse = \context_course::instance($this->courseid);
 
         if (!empty($files = local_notification::getLocalNotificationFiles($this->notification->id))) {
             $fs = get_file_storage();

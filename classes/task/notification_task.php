@@ -177,7 +177,6 @@ class notification_task extends scheduled_task
 
     public function execute()
     {
-        mtrace('########################################################################################################');
         $this->enable_email = get_config(local_notification::PLUGINNAME, 'enableemail');
         $this->enable_popup = get_config(local_notification::PLUGINNAME, 'enablepopup');
         if ($this->enable_email || $this->enable_popup) {
@@ -188,6 +187,5 @@ class notification_task extends scheduled_task
         } else {
             mtrace('No send type configured. Check plugin settings: admin/settings.php?section=local_notification');
         }
-        mtrace('########################################################################################################');
     }
 }

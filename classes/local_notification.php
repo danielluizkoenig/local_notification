@@ -27,8 +27,8 @@ class local_notification
     const URL_QUERY_FORM = '/local/notification/query_form.php';
 
     const TYPES = [
-        'all' => 'Todos os cursos',
-        'default' => 'Cursos padrão'
+        'all' => 'All courses',
+        'default' => 'Default courses'
     ];
 
     /**
@@ -44,10 +44,10 @@ class local_notification
     }
 
     /**
-     * Adiciona no histórico de entregas
+     * Store delivery time in history
      *
-     * @param int $userid id do usuário
-     * @param int $notificationid id da notificacao
+     * @param int $userid User ID
+     * @param int $notificationid Notification ID
      * @return bool
      */
     public static function store_deliveredtime($userid, $notificationid)
@@ -61,10 +61,10 @@ class local_notification
     }
 
     /**
-     * Retorna os ids dos arquivos de uma notificação
+     * Get file IDs for a notification
      *
-     * @param int $itemid do arquivo
-     * @param int $context é o contextid do arquivo
+     * @param int $itemid File item ID
+     * @param int $contextid Context ID
      * @return array
      */
     public static function getLocalNotificationFilesId($itemid, $contextid)
@@ -88,9 +88,9 @@ class local_notification
     }
 
     /**
-     * Retorna os arquivos vinculados a uma notificação
+     * Get files linked to a notification
      *
-     * @param int $notificationId é o id da notificação
+     * @param int $notificationId Notification ID
      * @return array
      */
     public static function getLocalNotificationFiles($notificationId)
@@ -103,10 +103,10 @@ class local_notification
     }
 
     /**
-     * Retorna os arquivos vinculados a uma notificação
+     * Delete files linked to a notification
      *
-     * @param int $context é o id do contexto do curso.
-     * @param int $notificationId é o id da notificação.
+     * @param int $context Course context ID
+     * @param int $notificationId Notification ID
      * @return bool
      */
     public static function deleteLocalNotificationFiles($context, $notificationId)

@@ -73,19 +73,19 @@ local/notification/
 ## Query Padrão
 
 ```sql
-SELECT u.firstname || ' ' || u.lastname AS nome_completo,
+SELECT CONCAT(u.firstname, ' ', u.lastname) AS nome_completo,
        u.id,
        u.email,
-       DATE_PART('day', now()-to_timestamp(c.startdate)) as data,
+       DATEDIFF(FROM_UNIXTIME(UNIX_TIMESTAMP()), FROM_UNIXTIME(c.startdate)) as data,
        en.courseid
-FROM mdl_course c
-JOIN mdl_context ctx ON ctx.instanceid = c.id
-JOIN mdl_role_assignments ra ON ctx.id = ra.contextid
-JOIN mdl_user_enrolments use ON use.userid = ra.userid AND use.status = 0
-JOIN mdl_enrol en ON use.enrolid = en.id AND en.courseid = ctx.instanceid
-JOIN mdl_user u ON ra.userid = u.id
-JOIN mdl_role r ON ra.roleid = r.id AND ra.roleid = 5
-WHERE c.id = %%COURSEID%% AND DATE_PART('day', now()-to_timestamp(c.startdate)) = %%TIME%%
+FROM {course} c
+JOIN {context} ctx ON ctx.instanceid = c.id AND ctx.contextlevel = 50
+JOIN {role_assignments} ra ON ctx.id = ra.contextid
+JOIN {user_enrolments} ue ON ue.userid = ra.userid AND ue.status = 0
+JOIN {enrol} en ON ue.enrolid = en.id AND en.courseid = ctx.instanceid
+JOIN {user} u ON ra.userid = u.id
+JOIN {role} r ON ra.roleid = r.id AND ra.roleid = 5
+WHERE c.id = %%COURSEID%% AND DATEDIFF(FROM_UNIXTIME(UNIX_TIMESTAMP()), FROM_UNIXTIME(c.startdate)) = %%TIME%%
 ```
 
 ## Tarefas Agendadas

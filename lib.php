@@ -19,7 +19,7 @@ function local_notification_extend_settings_navigation($settingsnav, $context)
     }
 
     if (
-        isloggedin() && (has_capability('local/local_notification:view', $context)) &&
+        isloggedin() && (has_capability('local/notification:view', $context)) &&
         ($settingnode = $settingsnav->find('courseadmin', navigation_node::TYPE_COURSE))
     ) {
 

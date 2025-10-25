@@ -29,7 +29,7 @@ if (!$course = $DB->get_record('course', ['id' => $courseid])) {
 require_login($course);
 $context = context_course::instance($course->id);
 require_login($course, false);
-require_capability('local/local_notification:view', $context);
+require_capability('local/notification:view', $context);
 
 if ($action === 'delete' && $notificationid) {
     notification_manager::delete_notification($notificationid, $context, $baseurl);

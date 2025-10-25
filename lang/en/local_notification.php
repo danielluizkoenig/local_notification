@@ -86,3 +86,10 @@ $string['not_accessed'] = 'Not Accessed';
 $string['export_csv'] = 'Export CSV';
 $string['export_excel'] = 'Export Excel';
 $string['days_difference'] = 'Days Difference';
+
+// Privacy API strings.
+$string['privacy:metadata:notification_history'] = 'Information about notifications sent to users';
+$string['privacy:metadata:notification_history:user_id'] = 'The ID of the user who received the notification';
+$string['privacy:metadata:notification_history:notification_id'] = 'The ID of the notification that was sent';
+$string['privacy:metadata:notification_history:delivered'] = 'The timestamp when the notification was delivered';
+$string['privacy:metadata:notification_history:timeaccess'] = 'The timestamp when the user first accessed after receiving the notification';

@@ -95,7 +95,7 @@ try {
     
     echo html_writer::table($table);
 } catch (Exception $e) {
-    echo $OUTPUT->notification('Erro ao carregar as configurações do plugin: ' . $e->getMessage(), 'notifyproblem');
+    echo $OUTPUT->notification('Error loading plugin configurations: ' . $e->getMessage(), 'notifyproblem');
 }
 
 echo $OUTPUT->footer();

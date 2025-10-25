@@ -53,7 +53,7 @@ class notification_manager
     public static function delete_notification(int $notificationid, context $context, moodle_url $redirecturl): void
     {
         global $DB;
-        require_capability('local/notification:deletenotification', context_system::instance());
+        require_capability('local/notification:manage', context_system::instance());
         try {
             $transaction = $DB->start_delegated_transaction();
 
@@ -79,7 +79,7 @@ class notification_manager
     public static function duplicate_notification(int $notificationid, moodle_url $redirecturl): void
     {
         global $DB;
-        require_capability('local/notification:duplicatenotification', context_system::instance());
+        require_capability('local/notification:manage', context_system::instance());
 
         try {
             $notification = $DB->get_record('notification', ['id' => $notificationid], '*', MUST_EXIST);
@@ -99,7 +99,7 @@ class notification_manager
     public static function toggle_notification(int $notificationid, moodle_url $redirecturl): void
     {
         global $DB;
-        require_capability('local/notification:duplicatenotification', context_system::instance());
+        require_capability('local/notification:manage', context_system::instance());
 
         try {
                 require_sesskey();

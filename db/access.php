@@ -9,7 +9,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $capabilities = [
-    'local/local_notification:view' => [
+    'local/notification:view' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => [
@@ -23,14 +23,7 @@ $capabilities = [
             'manager' => CAP_ALLOW,
         ]
     ],
-    'local/notification:deletenotification' => [
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => [
-            'manager' => CAP_ALLOW,
-        ]
-    ],
-    'local/notification:duplicatenotification' => [
+    'local/notification:manage' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [

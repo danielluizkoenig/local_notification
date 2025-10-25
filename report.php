@@ -9,6 +9,10 @@
 
 require_once('../../config.php');
 require_login();
+
+$context = context_system::instance();
+require_capability('local/notification:view', $context);
+
 $userid = $USER->id;
 $courseid = optional_param('courseid', 0, PARAM_INT);
 $notificationid = optional_param('notificationid', 0, PARAM_INT);
@@ -29,18 +33,19 @@ echo html_writer::tag('label', get_string('course'), array('for' => 'courseid'))
 
 
 $is_siteadmin = is_siteadmin($userid);
+$courses = [];
 
 if ($is_siteadmin) {
-    // Admin vê todos os cursos
-    $notifications = $DB->get_records_sql('select distinct course_id FROM {notification} n JOIN {course} c ON c.id = n.course_id WHERE status = 1 AND c.visible = 1 ', null);
+    // Admin sees all courses
+    $notifications = $DB->get_records_sql('SELECT DISTINCT course_id FROM {notification} n JOIN {course} c ON c.id = n.course_id WHERE status = 1 AND c.visible = 1');
     foreach ($notifications as $notification) {
         $courses[] = $notification->course_id;
     }
-    $course_ids = ($courses);
+    $course_ids = $courses;
 } else {
-    // Usuário normal
-    $courses = enrol_get_users_courses($userid, true, null);
-    $course_ids = array_keys($courses);
+    // Regular user
+    $user_courses = enrol_get_users_courses($userid, true, null);
+    $course_ids = array_keys($user_courses);
 }
 if (!empty($course_ids)) {
     list($insql, $inparams) = $DB->get_in_or_equal($course_ids, SQL_PARAMS_NAMED);
